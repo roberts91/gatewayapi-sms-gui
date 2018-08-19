@@ -46,7 +46,7 @@ require 'action-handling.php';
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container">
             <div class="navbar-header">
-                <a class="navbar-brand">SMS Dungeon</a>
+                <a class="navbar-brand" href="">SMS Dungeon</a>
             </div>
         </div>
     </nav>
