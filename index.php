@@ -17,12 +17,6 @@ $dotenv->load( __DIR__ . '/.env' );
 
 // Authentication
 require 'auth.php';
-require_auth( [
-    [
-        'user' => 'krukkaa',
-        'pass' => 'Skut@synker6969',
-    ],
-] );
 
 // Handle submission
 require 'action-handling.php';

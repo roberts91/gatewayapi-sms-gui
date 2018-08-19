@@ -25,3 +25,12 @@ function require_auth( $user_array ) {
 		exit;
 	}
 }
+
+if ( filter_var( getenv( 'htauth_active' ), FILTER_VALIDATE_BOOLEAN) !== false ) {
+	require_auth( [
+		[
+			'user' => getenv( 'htauth_user' ),
+			'pass' => getenv( 'htauth_pass' ),
+		],
+	] );
+}
