@@ -69,7 +69,7 @@ require 'action-handling.php';
                 <?php endif; ?>
             <?php endif; ?>
 
-            <form method="post" action="/">
+            <form method="post" action="">
                 <div class="form-group">
                     <label for="receivers">Receiver(s)</label>
                     <input type="text" class="form-control" id="receivers" name="receivers" placeholder="4781549300" value="<?php echo $s->getFormValue( 'receivers', true ); ?>">
