@@ -98,7 +98,7 @@ require 'action-handling.php';
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" value="1" name="api_clear_cookie" id="api_clear_cookie">
                     <label class="form-check-label" for="api_clear_cookie">
-                        Check to reset API credentials
+                        Check to reset API credentials on next submit
                     </label>
                 </div>
                 <hr>
