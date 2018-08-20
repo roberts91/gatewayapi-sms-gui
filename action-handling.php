@@ -129,16 +129,6 @@ class ActionHandling {
 
 		$formValid = true;
 
-		// Validate from-field
-		if ( empty( $from ) ) {
-			$this->addError( 'From-field missing value', 'field_errors', 'from' );
-			$formValid = false;
-		}
-		if ( mb_strlen( $from ) > 11 ) {
-			$this->addError( 'From-field value cannot be over 11 characters in length', 'field_errors', 'from' );
-			$formValid = false;
-		}
-
 		// Validate receivers
 		if ( empty( $receivers ) ) {
 			$this->addError( 'Receivers-field missing value', 'field_errors', 'receivers' );
@@ -146,6 +136,12 @@ class ActionHandling {
 		}
 		if ( ! empty( $receivers ) && ! ctype_digit( str_replace( ',', '', $receivers ) ) ) {
 			$this->addError( 'Receivers-field contains non-digit characters (only command and digits allowed)', 'field_errors', 'receivers' );
+			$formValid = false;
+		}
+
+		// Validate from-field
+		if ( empty( $from ) ) {
+			$this->addError( 'From-field missing value', 'field_errors', 'from' );
 			$formValid = false;
 		}
 
