@@ -3,3 +3,11 @@
 /* ==========================================================================
    Author's custom styles
    ========================================================================== */
+label.form-check-label {
+    cursor: pointer;
+}
+.credit-amount {
+    line-height: 60px;
+    float: right;
+    color: white;
+}

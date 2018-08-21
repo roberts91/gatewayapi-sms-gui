@@ -1,6 +1,7 @@
 {
     "require": {
         "guzzlehttp/oauth-subscriber": "^0.3.0",
-        "symfony/dotenv": "^4.1"
+        "symfony/dotenv": "^4.1",
+        "symfony/Intl": "^4.1"
     }
 }

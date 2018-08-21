@@ -234,9 +234,10 @@ class ActionHandling {
 	 */
 	private function getValues() {
 		return (object) [
-			'from'      => $this->getPostParam( 'from' ),
-			'receivers' => $this->getPostParam( 'receivers' ),
-			'message'   => $this->getPostParam( 'message' ),
+			'from'          => $this->getPostParam( 'from' ),
+			'receivers'     => $this->getPostParam( 'receivers' ),
+			'message'       => $this->getPostParam( 'message' ),
+			'flash_message' => ( $this->getPostParam( 'flash_message' ) === '1' ),
 		];
 	}
 
@@ -296,7 +297,7 @@ class ActionHandling {
 			}
 
 			// Try to send
-			$result = $this->sendSMS( $this->values->from, $this->parseReceivers( $this->values->receivers ), $this->values->message );
+			$result = $this->sendSMS( $this->values->from, $this->parseReceivers( $this->values->receivers ), $this->values->message, $this->values->flash_message );
 			if ( $result['result'] ) {
 				$this->result = true;
 			} else {
@@ -324,6 +325,11 @@ class ActionHandling {
 		return $value;
 	}
 
+	/**
+	 * Get API credentials.
+	 *
+	 * @return array
+	 */
 	private function getApiCredentials() {
 		$storedKey = $this->getCookieValue( 'api_key' );
 		$storedSecret = $this->getCookieValue( 'api_secret' );
@@ -341,15 +347,11 @@ class ActionHandling {
 	}
 
 	/**
-	 * Send SMS.
+	 * Get Guzzle client.
 	 *
-	 * @param $from
-	 * @param $receivers
-	 * @param $message
-	 *
-	 * @return array
+	 * @return \GuzzleHttp\Client
 	 */
-	private function sendSMS( $from, $receivers, $message ) {
+	private function getHTTPClient() {
 		$apiCredentials = $this->getApiCredentials();
 		$stack = \GuzzleHttp\HandlerStack::create();
 		$oauth_middleware = new \GuzzleHttp\Subscriber\Oauth\Oauth1( [
@@ -359,16 +361,52 @@ class ActionHandling {
 			'token_secret'    => ''
 		] );
 		$stack->push( $oauth_middleware );
-		$client = new \GuzzleHttp\Client( [
+		return new \GuzzleHttp\Client( [
 			'base_uri' => 'https://gatewayapi.com/rest/',
 			'handler'  => $stack,
 			'auth'     => 'oauth'
 		] );
+	}
+
+	/**
+	 * Get available credit for API user.
+	 *
+	 * @return bool|mixed
+	 */
+	public function getCredit() {
+		$client = $this->getHTTPClient();
+		$res = $client->get( 'me', [ 'http_errors' => false ] );
+		$credit = json_decode( $res->getBody() );
+		if ( property_exists( $credit, 'credit' ) && property_exists( $credit, 'currency' ) ) {
+			$credit->credit = number_format( $credit->credit, 2 );
+			$credit->symbol = Symfony\Component\Intl\Intl::getCurrencyBundle()->getCurrencySymbol( $credit->currency );
+			return $credit;
+		}
+		return false;
+	}
+
+	/**
+	 * Send SMS.
+	 *
+	 * @param $from
+	 * @param $receivers
+	 * @param $message
+	 * @param bool $flash
+	 *
+	 * @return array
+	 */
+	private function sendSMS( $from, $receivers, $message, $flash = false ) {
+		$client = $this->getHTTPClient();
 		$req = [
 			'sender'     => $from,
 			'recipients' => $receivers,
 			'message'    => $message,
 		];
+		if ( $flash ) {
+			$req['class'] = 'premium';
+			$req['destaddr'] = 'DISPLAY';
+		}
+
 		$res = $client->post( 'mtsms', [ 'json' => $req, 'http_errors' => false ] );
 		return [
 			'result' => ( $res->getStatusCode() === 200 ),

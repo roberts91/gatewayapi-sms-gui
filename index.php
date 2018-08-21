@@ -21,6 +21,8 @@ require 'auth.php';
 // Handle submission
 require 'action-handling.php';
 
+$credit = $s->getCredit();
+
 ?><!doctype html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
@@ -48,6 +50,11 @@ require 'action-handling.php';
             <div class="navbar-header">
                 <a class="navbar-brand" href="">SMS Dungeon</a>
             </div>
+	        <?php if ( $credit ) : ?>
+            <div id="navbar" class="navbar-collapse collapse credit-amount">
+                <span>Credit: <?php echo $credit->credit . ' ' . ( $credit->symbol ? $credit->symbol : $credit->currency ); ?></span>
+            </div>
+	        <?php endif; ?>
         </div>
     </nav>
     <div class="jumbotron">
@@ -83,6 +90,12 @@ require 'action-handling.php';
                 <div class="form-group">
                     <label for="message">Message</label>
                     <textarea class="form-control" id="message" name="message" placeholder="Message" rows="3"><?php echo $s->getFormValue( 'message' ); ?></textarea>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="1" name="flash_message" id="flash_message">
+                    <label class="form-check-label" for="flash_message">
+                        Flash message? Read more about flash messages <a href="https://en.wikipedia.org/wiki/SMS#Flash_SMS" target="_blank">here</a>. Note that message cost increases.
+                    </label>
                 </div>
                 <hr>
                 <div class="form-group">
