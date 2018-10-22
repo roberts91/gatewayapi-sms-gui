@@ -7,7 +7,7 @@ ini_set( 'display_errors', true );
 error_reporting( E_ALL );
 
 // Load composer dependencies
-if ( ! file_exists( 'vendor/autoload.php' ) ) die( 'Composer dependencies missing');
+if ( ! file_exists( 'vendor/autoload.php' ) ) die( 'Composer dependencies missing' );
 require_once 'vendor/autoload.php';
 
 // Load dotenv
