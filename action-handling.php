@@ -8,7 +8,7 @@ defined( 'ABSPATH' ) || exit;
 class ActionHandling {
 
 	/** @var string Cookie prefix for cookie storage. */
-	private $cookiePrefix = 'apekatt_';
+	private $cookiePrefix = 'sms_dungeon_';
 
 	/** @var bool Whether cookies have been cleared during this request. */
 	private $cookiesCleared = false;
